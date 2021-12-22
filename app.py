@@ -71,7 +71,7 @@ def handle_message(event):
     if "こんにちは" in text:
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="Hello World")
+            TextSendMessage(text="Hello World!!")
          )
     else:
     	line_bot_api.reply_message(
