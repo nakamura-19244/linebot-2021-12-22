@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 # インポートするライブラリ
-from flask import Flask, request, abort, render_template, jsonify
+from flask import Flask, request, abort, render_template, jsonify, send_from_directory
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -19,6 +19,8 @@ from linebot.models import (
 import os
 import json
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 # ウェブアプリケーションフレームワーク:flaskの定義
 app = Flask(__name__)
@@ -72,7 +74,45 @@ def handle_message(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="Hello World")
-         )
+         )     
+    elif text == "グラフ":
+        # サンプルのデータを生成
+        t = np.arange(0.0, 2.0, 0.01)
+        s = 1 + np.sin(2 * np.pi * t)
+
+        # グラフ化
+        fig, ax = plt.subplots()
+        ax.plot(t, s)
+
+        ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+            title='About as simple as it gets, folks')
+        ax.grid()
+
+        print("グラフを生成しました。")
+
+        # 画像を保存
+        if not os.path.exists("./tmp"):
+            os.mkdir("./tmp")
+
+        fig.savefig("tmp/graph.png")
+
+        print("画像を生成しました。")
+
+        # 画像のURL (公開用)
+        image_url = "https://linebot-2021-12-22.herokuapp.com/files/graph.png"
+
+        # 生成した画像を送信
+        line_bot_api.reply_message(
+            event.reply_token,
+            ImageSendMessage(
+                original_content_url=image_url,
+                preview_image_url=image_url
+            )
+        )
+
+    elif text == "コンター図":
+        print("コンター図がリクエストされました。")
+
     else:
     	line_bot_api.reply_message(
             event.reply_token,
@@ -80,6 +120,14 @@ def handle_message(event):
          )
 
 
+# ローカルのファイルを提供する
+@app.route("/files/<path:filepath>", methods=["GET"])
+def files(filepath):
+    # ローカルのファイルを送信
+    return send_from_directory(
+        "./tmp",
+        filepath
+    )
 
 
 if __name__ == "__main__":
