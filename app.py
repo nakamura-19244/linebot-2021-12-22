@@ -1,7 +1,11 @@
 #-*- coding: utf-8 -*-
 
 # インポートするライブラリ
+<<<<<<< HEAD
 from flask import Flask, request, abort, render_template, jsonify, send_from_directory
+=======
+from flask import Flask, request, abort, render_template, jsonify
+>>>>>>> 487d8fbe67350e285d39cb906aa36c74e48c4a0d
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -19,8 +23,11 @@ from linebot.models import (
 import os
 import json
 
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
 import numpy as np
+=======
+>>>>>>> 487d8fbe67350e285d39cb906aa36c74e48c4a0d
 
 # ウェブアプリケーションフレームワーク:flaskの定義
 app = Flask(__name__)
