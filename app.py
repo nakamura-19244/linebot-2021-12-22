@@ -60,7 +60,6 @@ def callback():
     return jsonify({"state": 200})
 
 
-
 # MessageEvent　テキストメッセージ受け取った時
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
